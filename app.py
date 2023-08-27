@@ -1,11 +1,6 @@
-import io
 from fastapi import FastAPI
-from fastapi.responses import StreamingResponse
 import pandas as pd
 from sklearn.metrics.pairwise import cosine_similarity
-import matplotlib.pyplot as plt
-import seaborn as sns
-import plotly.express as px
 
 app = FastAPI()
 
@@ -83,70 +78,8 @@ def calculate_weighted_rating(user_id, movie_id, n):
 async def read_root():
     return "Hola!"
 
-@app.post("/Rating_Recommender/")
+@app.post("/calculate_rating/")
 async def calculate_rating(user_id: int, movie_id: int, n: int):
     # Call your recommendation function and return the result
     result = calculate_weighted_rating(user_id, movie_id, n)
-    if type(result) != str:
-        if result< 2.5:
-            return f"The user with {user_id} would rate {movie_id} as {result}, therefore it is not advisable to recommend the given movie to the given user"
-        if result>= 2.5:
-            return f"The user with {user_id} would rate {movie_id} as {result}, therefore it is advisable to recommend the given movie to the given user"
-    else:
-        return result
-
-@app.get("/eda/")
-async def perform_eda():
-
-    # Rename the 'Series or Movie' column
-    df.rename(columns={'Series or Movie': 'Type'}, inplace=True)
-
-    # Create a pie chart for Movies vs. Series proportion
-    color = ['yellow', 'blue']
-    label = ['Series', 'Movies']
-    sizes = [df[df['Type'] == 'Series'].size, df[df['Type'] == 'Movie'].size]
-    explode = (0.1, 0)
-
-    fig, ax = plt.subplots()
-    ax.pie(sizes, explode=explode, labels=label, colors=color, autopct='%2.2f%%')
-    ax.axis('equal')
-
-    # Convert the plot to image bytes
-    img_bytes = io.BytesIO()
-    plt.savefig(img_bytes, format="png", bbox_inches="tight")
-    plt.close()
-
-    # Calculate the language popularity
-    language_counts = df['Languages'].str.split(',').explode().value_counts()
-
-    # Select the top 10 most popular languages and reset the index
-    top_languages = language_counts.head(10).reset_index()
-
-    # Create a bar plot for language popularity
-    language_fig = px.bar(top_languages, y='index', x='Languages', orientation='h',
-                          title='Most Popular Languages in Netflix Content', color='Languages',
-                          color_continuous_scale='Cividis')
-    language_fig.update_layout(yaxis={'categoryorder': 'total ascending'})
-
-    # Convert the language plot to image bytes
-    language_img_bytes = io.BytesIO()
-    language_fig.write_image(language_img_bytes, format="png")
-
-    # Sort the Netflix dataset by IMDb Score in descending order and select the top 10 rows
-    top_10_imdb = df.sort_values(by='IMDb Score', ascending=False).head(10)
-
-    # Create a horizontal bar chart for top IMDb titles
-    imdb_fig = px.bar(top_10_imdb, y='Title', x='IMDb Score', orientation='h',
-                      title='Top 10 Netflix Titles by IMDb Score', color='IMDb Score',
-                      color_continuous_scale='Cividis')
-    imdb_fig.update_yaxes(categoryorder='total ascending')
-
-    # Convert the IMDb plot to image bytes
-    imdb_img_bytes = io.BytesIO()
-    imdb_fig.write_image(imdb_img_bytes, format="png")
-
-    # Return all the plots and information as a StreamingResponse
-    return StreamingResponse(
-        io.BytesIO(img_bytes.getvalue() + language_img_bytes.getvalue() + imdb_img_bytes.getvalue()),
-        media_type="image/png"
-    )
+    return {"recommendation": result}
