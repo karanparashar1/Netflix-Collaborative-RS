@@ -9,9 +9,9 @@ df = pd.read_csv("Netflix_Dataset_Det.csv", encoding="ISO-8859-1")  # or encodin
 
 # Load your movie and rating data into matrices
 df_movie = pd.read_csv("Netflix_Dataset_Movie.csv")
-df_rating = pd.read_csv("Netflix_Dataset_Rating.csv")
+df_rating = pd.read_csv("Netflix_Dataset_Rating.csv", delimiter=",")
 
-# Merging them into ine DataFrame
+# Merging them into one DataFrame
 merged_df = pd.merge(df_rating, df_movie, on='Movie_ID')
 
 # Creating a utility matrix for the recommender
