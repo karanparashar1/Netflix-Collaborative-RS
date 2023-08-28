@@ -9,7 +9,7 @@ df = pd.read_csv("Netflix_Dataset_Det.csv", encoding="ISO-8859-1")  # or encodin
 
 # Load your movie and rating data into matrices
 df_movie = pd.read_csv("Netflix_Dataset_Movie.csv")
-df_rating = pd.read_csv("Netflix_Dataset_Rating.csv", delimiter=",")
+df_rating = pd.read_csv("Netflix_Dataset_Rating.csv")
 
 # Merging them into one DataFrame
 merged_df = pd.merge(df_rating, df_movie, on='Movie_ID')
@@ -70,9 +70,9 @@ def calculate_weighted_rating(user_id, movie_id, n):
     else:
         if type(rating) != str:
             if rating < 2.5:
-                return f"The user with {user_id} would rate {movie_id} as {rating} \nTherefore it is not advisable to recommend the given movie to the given user."
+                return f"The user with {user_id} would rate {movie_id} as {rating}, therefore it is not advisable to recommend the given movie to the given user."
             else:
-                return f"The user with {user_id} would rate {movie_id} as {rating} \nTherefore it is advisable to recommend the given movie to the given user."
+                return f"The user with {user_id} would rate {movie_id} as {rating}, therefore it is advisable to recommend the given movie to the given user."
 
 @app.get("/")
 async def read_root():
