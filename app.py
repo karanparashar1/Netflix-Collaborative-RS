@@ -10,7 +10,7 @@ df = pd.read_csv("Netflix_Dataset_Det.csv", encoding="ISO-8859-1")  # or encodin
 # Load your movie and rating data into matrices
 df_movie = pd.read_csv("Netflix_Dataset_Movie.csv")
 df_rating = pd.read_csv("Netflix_Dataset_Rating.csv")
-
+print(df_movie.columns, df_rating.columns)
 # Merging them into one DataFrame
 merged_df = pd.merge(df_rating, df_movie, on='Movie_ID')
 
