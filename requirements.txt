@@ -1,3 +1,6 @@
 fastapi
 pandas
 scikit-learn
+os
+fastapi
+uvicorn
