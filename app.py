@@ -1,15 +1,39 @@
 from fastapi import FastAPI
 import pandas as pd
 from sklearn.metrics.pairwise import cosine_similarity
+import os
 
 app = FastAPI()
 
+# Print current working directory
+print("Current Working Directory:", os.getcwd())
+
+# Absolute file paths for local machine (Windows)
+csv_path_det_local = r'C:\Users\DELL\Downloads\Netflix_Collaborative_RS\Netflix_Dataset_Det.csv'
+csv_path_movie_local = r'C:\Users\DELL\Downloads\Netflix_Collaborative_RS\Netflix_Dataset_Movie.csv'
+csv_path_rating_local = r'C:\Users\DELL\Downloads\Netflix_Collaborative_RS\Netflix_Dataset_Rating.csv'
+
+# Absolute file paths for cloud VM instance (Linux/Unix)
+csv_path_det_cloud = '/home/ec2-user/Netflix-Collaborative-RS/Netflix_Dataset_Det.csv'
+csv_path_movie_cloud = '/home/ec2-user/Netflix-Collaborative-RS/Netflix_Dataset_Movie.csv'
+csv_path_rating_cloud = '/home/ec2-user/Netflix-Collaborative-RS/Netflix_Dataset_Rating.csv'
+
+# Choose the appropriate paths based on the environment (local/cloud)
+if os.name == 'nt':  # Windows
+    csv_path_det = csv_path_det_local
+    csv_path_movie = csv_path_movie_local
+    csv_path_rating = csv_path_rating_local
+else:  # Linux/Unix
+    csv_path_det = csv_path_det_cloud
+    csv_path_movie = csv_path_movie_cloud
+    csv_path_rating = csv_path_rating_cloud
+
 # Load your Netflix dataset into a DataFrame
-df = pd.read_csv("Netflix_Dataset_Det.csv", encoding="ISO-8859-1")  # or encoding="utf-16"
+df = pd.read_csv(csv_path_det, encoding="ISO-8859-1")
 
 # Load your movie and rating data into matrices
-df_movie = pd.read_csv("Netflix_Dataset_Movie.csv")
-df_rating = pd.read_csv("Netflix_Dataset_Rating.csv")
+df_movie = pd.read_csv(csv_path_movie)
+df_rating = pd.read_csv(csv_path_rating)
 
 # Merging them into one DataFrame
 merged_df = pd.merge(df_rating, df_movie, on='Movie_ID')
