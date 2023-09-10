@@ -1,5 +1,6 @@
 fastapi
 pandas
+numpy
 scikit-learn
 os
 fastapi
